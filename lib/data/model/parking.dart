@@ -17,4 +17,11 @@ class Parking {
           json['capacity']);
     }
   }
+
+  @override
+  String toString() {
+    return name;
+  }
+
+
 }
