@@ -3,6 +3,7 @@ import 'package:client/data/model/parking.dart';
 import 'package:client/util/strings.dart';
 import 'package:client/util/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   final ApiManager apiManager;
@@ -15,12 +16,24 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(Strings.APP_NAME),
       ),
-      body: _buildAppScreenBody(),
+      body: _buildAppScreenBody(context),
     );
   }
 
-  Widget _buildAppScreenBody() {
-    return Column(children: <Widget>[_buildAppScreenList()],);
+  Widget _buildAppScreenBody(BuildContext context) {
+    return Container(
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      child: GoogleMap(
+        onMapCreated: (GoogleMapController controller) {},
+      ),
+    );
   }
 
   FutureBuilder<List<Parking>> _buildAppScreenList() {
@@ -30,7 +43,6 @@ class HomeScreen extends StatelessWidget {
           return new AppScreenList(snapshot);
         });
   }
-
 
 }
 
