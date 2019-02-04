@@ -30,9 +30,7 @@ class HomeScreen extends StatelessWidget {
           .of(context)
           .size
           .width,
-      child: GoogleMap(
-        onMapCreated: (GoogleMapController controller) {},
-      ),
+        child: _buildAppScreenList()
     );
   }
 
@@ -40,44 +38,54 @@ class HomeScreen extends StatelessWidget {
     return FutureBuilder(
         future: apiManager.loadParkings(),
         builder: (BuildContext context, AsyncSnapshot<List<Parking>> snapshot) {
-          return new AppScreenList(snapshot);
+          return AppScreenMap(snapshot);
         });
   }
 
 }
 
-class AppScreenList extends StatelessWidget {
+class AppScreenMap extends StatelessWidget {
   final AsyncSnapshot<List<Parking>> snapshot;
 
-  AppScreenList(this.snapshot);
+  AppScreenMap(this.snapshot);
 
   @override
   Widget build(BuildContext context) {
     return Widgets.returnWidgetOrEmpty(
-        snapshot, () => AppParkingList(snapshot.data));
+        snapshot, () => AppParkingMap(snapshot.data));
   }
 }
 
-class AppParkingList extends StatelessWidget {
+class AppParkingMap extends StatelessWidget {
   final List<Parking> parkingList;
 
-  AppParkingList(this.parkingList);
+  AppParkingMap(this.parkingList);
+
 
   @override
   Widget build(BuildContext context) {
-    return new Flexible(
-      child: new ListView.builder(
-          itemBuilder: (context, index) =>
-          new AppRepoListTile(parkingList[index]),
-          itemCount: parkingList.length),
+    return GoogleMap(
+        onMapCreated: (GoogleMapController controller) {
+          parkingList.forEach
+            ((parking) =>
+              controller.addMarker(
+                  MarkerOptions(
+                      position: LatLng(parking.latitude, parking.longitude),
+                      infoWindowText: InfoWindowText(
+                          parking.name,
+                          "Capacity: " + parking.capacity.toString())
+                  )
+              )
+          );
+        }
     );
   }
 }
 
-class AppRepoListTile extends StatelessWidget {
+class AppParkingMarker extends StatelessWidget {
   final Parking parking;
 
-  AppRepoListTile(this.parking);
+  AppParkingMarker(this.parking);
 
   @override
   Widget build(BuildContext context) {
