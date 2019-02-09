@@ -1,6 +1,5 @@
 import 'package:client/data/api_manager.dart';
 import 'package:client/data/model/parking.dart';
-import 'package:client/util/strings.dart';
 import 'package:client/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,24 +11,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text(Strings.APP_NAME),
-      ),
-      body: _buildAppScreenBody(context),
-    );
+    return _buildAppScreenBody(context);
   }
 
   Widget _buildAppScreenBody(BuildContext context) {
     return Container(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
         child: _buildAppScreenList()
     );
   }
@@ -66,6 +60,8 @@ class AppParkingMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return GoogleMap(
         onMapCreated: (GoogleMapController controller) {
+          Parking parking = parkingList[0];
+
           parkingList.forEach
             ((parking) =>
               controller.addMarker(
@@ -75,6 +71,13 @@ class AppParkingMap extends StatelessWidget {
                           parking.name,
                           "Capacity: " + parking.capacity.toString())
                   )
+              )
+          );
+
+          controller.animateCamera(
+              CameraUpdate.newLatLngZoom(
+                  LatLng(parking.latitude, parking.longitude),
+                  14
               )
           );
         }
