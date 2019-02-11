@@ -1,5 +1,6 @@
 import 'package:client/data/api_manager.dart';
 import 'package:client/data/model/parking.dart';
+import 'package:client/util/strings.dart';
 import 'package:client/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,20 +16,53 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildAppScreenBody(BuildContext context) {
-    return Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        child: _buildAppScreenList()
+    return Scaffold(
+        body: Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            child: new Stack(children: <Widget>[
+              _buildAppScreenMap(),
+              Align(
+                alignment: Alignment(.0, -.8),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(8.0)
+                      )
+                  ),
+                  margin: EdgeInsets.only(left: 18.0, right: 18.0),
+                  padding: EdgeInsets.all(12.0),
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: TextField(
+                          decoration: InputDecoration.collapsed(
+                            hintText: Strings.MAP_TEXT_HINT,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.mic,
+                        color: Colors.black,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            )
+        )
     );
   }
 
-  FutureBuilder<List<Parking>> _buildAppScreenList() {
+  FutureBuilder<List<Parking>> _buildAppScreenMap() {
     return FutureBuilder(
         future: apiManager.loadParkings(),
         builder: (BuildContext context, AsyncSnapshot<List<Parking>> snapshot) {
@@ -59,6 +93,9 @@ class AppParkingMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+        options: GoogleMapOptions(
+          myLocationEnabled: true,
+        ),
         onMapCreated: (GoogleMapController controller) {
           Parking parking = parkingList[0];
 
