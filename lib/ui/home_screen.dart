@@ -1,6 +1,6 @@
 import 'package:client/data/api_manager.dart';
 import 'package:client/data/model/parking.dart';
-import 'package:client/util/strings.dart';
+import 'package:client/ui/destination_text_field.dart';
 import 'package:client/util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -41,13 +41,7 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.all(12.0),
                   child: Row(
                     children: <Widget>[
-                      Flexible(
-                        child: TextField(
-                          decoration: InputDecoration.collapsed(
-                            hintText: Strings.MAP_TEXT_HINT,
-                          ),
-                        ),
-                      ),
+                      DestinationTextFieldWidget(),
                       Icon(
                         Icons.mic,
                         color: Colors.black,
@@ -120,18 +114,4 @@ class AppParkingMap extends StatelessWidget {
         }
     );
   }
-}
-
-class AppParkingMarker extends StatelessWidget {
-  final Parking parking;
-
-  AppParkingMarker(this.parking);
-
-  @override
-  Widget build(BuildContext context) {
-    return new ListTile(
-      title: new Text(parking.name),
-    );
-  }
-
 }
